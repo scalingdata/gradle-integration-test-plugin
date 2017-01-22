@@ -1,0 +1,61 @@
+/*
+ * Copyright (c) 2016 Rocana.
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+apply plugin: 'groovy'
+apply plugin: 'maven'
+
+repositories {
+  mavenCentral()
+}
+
+dependencies {
+  compile localGroovy()
+  compile gradleApi()
+}
+
+uploadArchives {
+  repositories {
+    mavenDeployer {
+      String repoId = 'com.scalingdata.releases'
+
+      if (project.version.endsWith('-SNAPSHOT')) {
+        repoId = 'com.scalingdata.snapshots'
+      }
+
+      repository(url: "http://repository.rocana.com/content/repositories/$repoId/") {
+        if (project.hasProperty('repository.username') && project.hasProperty('repository.password')) {
+          authentication(userName: project.property('repository.username'), password: project.property('repository.password'))
+        }
+
+        pom.project {
+          licenses {
+            license {
+              name 'The Apache License, Version 2.0'
+              url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+            }
+          }
+
+          scm {
+            connection 'scm:git:git@github.com:scalingdata/gradle-integration-test-plugin.git'
+            developerConnection 'scm:git:git@github.com:scalingdata/gradle-integration-test-plugin.git'
+            url 'https://github.com/scalingdata/gradle-integration-test-plugin'
+            tag 'master'
+          }
+        }
+      }
+    }
+  }
+}
