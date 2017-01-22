@@ -7,7 +7,7 @@ An integration testing plugin for Gradle.
 This plugin uses Gradle as its build tool. To build the project, run the
 following.
 
-`gradle build`
+`./gradlew build`
 
 ## Using this Plugin
 
